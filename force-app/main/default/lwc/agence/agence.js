@@ -166,7 +166,10 @@ export default class agence extends LightningElement {
     @api sObjectApiName = 'Account';
     @api defaultRecordId = '';
     @api selectedType = '' ;
-    @api distributorId = '' ; 
+    @api distributorId = '' ;
+    // agence selectionné  
+    @api agenceId = '';
+    @api agenceName = '';
 
     // private properties 
     lstResult = []; // to store list of returned records   
@@ -286,5 +289,15 @@ lookupUpdatehandler(value){
 );
 this.dispatchEvent(oEvent);
 }
-}
+// agence select 
+lookupUpdatehandler(value) {    
+    if (value && value.Id) {
+        this.agenceName = value.Name;
+        console.log('Selected Agence: ' + this.agenceName); // Ajout du console.log
+        const lookupAgenceUpdateEvent = new CustomEvent('lookupAgenceupdate', {
+            detail: this.agenceName
+        });
+        this.dispatchEvent(lookupAgenceUpdateEvent);
+    }
+}}
 

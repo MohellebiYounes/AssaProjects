@@ -12,11 +12,11 @@ public class AgenceController {
          string sQuery ;
          string sWildCardText = '%' + searchKey + '%';
          if (selectedType == '') {
-            sQuery = 'SELECT Id, Name FROM ' + sObjectApiName + ' WHERE Name LIKE :sWildCardText AND RecordType.Name = \'Agency\' AND inwiB2C_TypePartenaire__c = \'inwiB2C_Distributeur\' AND ParentId = :distributorId ORDER BY CreatedDate DESC LIMIT 5';
+            sQuery = 'SELECT Id, Name FROM ' + sObjectApiName + ' WHERE Name LIKE :sWildCardText AND RecordType.Name = \'Partenaire\' AND inwiB2C_TypePartenaire__c = \'inwiB2C_Agence\'   ORDER BY CreatedDate DESC LIMIT 5';
         } else if (selectedType == 'Utilisateur BO') {
-            sQuery = 'SELECT Id, Name FROM ' + sObjectApiName + ' WHERE Name LIKE :sWildCardText AND RecordType.Name = \'Agency\' AND inwiB2C_TypePartenaire__c = \'inwiB2C_Distributeur\' AND InwiB2C_IsBoAgence__c = true AND ParentId = :distributorId ORDER BY CreatedDate DESC LIMIT 5';
+            sQuery = 'SELECT Id, Name FROM ' + sObjectApiName + ' WHERE Name LIKE :sWildCardText AND RecordType.Name = \'Partenaire\' AND inwiB2C_TypePartenaire__c = \'inwiB2C_Agence\' AND InwiB2C_IsBoAgence__c = true AND ParentId = :distributorId ORDER BY CreatedDate DESC LIMIT 5';
         } else if (selectedType == 'Animateur' || selectedType == 'Livreur') {
-            sQuery = 'SELECT Id, Name FROM ' + sObjectApiName + ' WHERE Name LIKE :sWildCardTextAND RecordType.Name = \'Agency\' AND inwiB2C_TypePartenaire__c = \'inwiB2C_Distributeur\' AND InwiB2C_IsBoAgence__c = false AND InwiB2C_CellulBo__c != null AND ParentId = :distributorId ORDER BY CreatedDate DESC LIMIT 5';
+            sQuery = 'SELECT Id, Name FROM ' + sObjectApiName + ' WHERE Name LIKE :sWildCardTextAND RecordType.Name = \'Partenaire\' AND inwiB2C_TypePartenaire__c = \'inwiB2C_Agence\' AND InwiB2C_IsBoAgence__c = false AND InwiB2C_CellulBo__c != null AND ParentId = :distributorId ORDER BY CreatedDate DESC LIMIT 5';
         }
         // if (selectedType == '') {
         //     sQuery = 'SELECT Id, Name FROM ' + sObjectApiName + ' WHERE Name LIKE :sWildCardText AND InwiB2C_Type_Paretenaire__c = \'Partenaire\' AND InwiB2C_Record_Type__c = \'Distributeur\'   ORDER BY CreatedDate DESC LIMIT 5';

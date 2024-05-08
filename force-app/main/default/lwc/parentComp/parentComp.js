@@ -9,6 +9,8 @@ export default class ParentComponent extends LightningElement {
     @track helloWorldValidated = false;
     @track distributeurValidated = false;
     @track Error = ''
+    @track selectedAgenceId ;
+    @track selectedAgenceName ;
 
     handleTypeChange(event) {
         this.selectedType = event.detail; // Récupère le type d'utilisateur sélectionné
@@ -19,6 +21,11 @@ export default class ParentComponent extends LightningElement {
     lookupUpdatehandler(event) {
         this.distributorId = event.detail; // recuperer l'id du distributeur 
         this.Error = '' ;
+    }
+
+    lookupUpdatehandler (event) {
+        this.selectedAgenceId = event.detail ;
+        this.selectedAgenceName = event.detail ;
     }
     ///////////////////////////// condition d'affichage des composant/////////////////////////////////////
     // validateHelloWorld() {
