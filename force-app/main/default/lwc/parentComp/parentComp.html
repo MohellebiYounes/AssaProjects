@@ -1,0 +1,19 @@
+<template>
+    <!-- <template if:true={showHelloWorld}> -->
+        <c-type-user ontypechange={handleTypeChange}></c-type-user>
+        <!-- <lightning-button onclick={nextSection} label="Next"></lightning-button> -->
+    <!-- </template> -->
+    <!-- <template if:true={showDistributeur}> -->
+        <c-distributeur onlookupupdate={lookupUpdatehandler}></c-distributeur>
+        <!-- <lightning-button onclick={previousSection} label="Previous"></lightning-button>
+        <lightning-button onclick={nextSection} label="Next"></lightning-button> -->
+    <!-- </template> -->
+    <!-- <template if:true={showSection3}> -->
+        <c-agence selected-type={selectedType} distributor-id={distributorId}></c-agence>
+        <!-- <lightning-button onclick={previousSection} label="Previous"></lightning-button>
+        <lightning-button onclick={nextSection} label="Next"></lightning-button> -->
+    <!-- </template> -->
+    <!-- <div class="error-message">{Error}</div> -->
+    <c-information-contact-user selected-type={selectedType}></c-information-contact-user>
+     
+</template>

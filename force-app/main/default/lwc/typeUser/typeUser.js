@@ -1,10 +1,7 @@
-import { LightningElement } from 'lwc';
-
-
-export default class helloWorld extends LightningElement {
+import { LightningElement , track } from 'lwc';
+export default class typeUser extends LightningElement {
     selectedType = ''; // Ne pas définir comme @api
-
-    // Définissez les options de la liste de sélection
+    
     get options() {
         return [
             { label: 'Utilisateur BO', value: 'Utilisateur BO' },

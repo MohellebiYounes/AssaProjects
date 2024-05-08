@@ -153,19 +153,20 @@ Source : lwcFactory.com
 */
 import { LightningElement,api,wire,track} from 'lwc';
 // import apex method from salesforce module 
-import fetchLookupData from '@salesforce/apex/CustomLookupLwcController.fetchLookupData';
-import fetchDefaultRecord from '@salesforce/apex/CustomLookupLwcController.fetchDefaultRecord';
+import fetchLookupData from '@salesforce/apex/AgenceController.fetchLookupData';
+import fetchDefaultRecord from '@salesforce/apex/AgenceController.fetchDefaultRecord';
 
 const DELAY = 300; // dealy apex callout timing in miliseconds  
 
-export default class section3 extends LightningElement {
+export default class agence extends LightningElement {
     // public properties with initial default values 
     @api label = 'Account';
     @api placeholder = 'search...'; 
     @api iconName = 'standard:account';
     @api sObjectApiName = 'Account';
     @api defaultRecordId = '';
-    @api selectedType ;
+    @api selectedType = '' ;
+    @api distributorId = '' ; 
 
     // private properties 
     lstResult = []; // to store list of returned records   
@@ -193,7 +194,7 @@ export default class section3 extends LightningElement {
 }
 
     // wire function property to fetch search record based on user input
-    @wire(fetchLookupData, { searchKey: '$searchKey', sObjectApiName: '$sObjectApiName', selectedType: '$selectedType' })
+    @wire(fetchLookupData, { searchKey: '$searchKey', sObjectApiName: '$sObjectApiName', selectedType: '$selectedType' , distributorId: '$distributorId'})
      searchResult(value) {
         const { data, error } = value; // destructure the provisioned value
         this.isSearchLoading = false;
