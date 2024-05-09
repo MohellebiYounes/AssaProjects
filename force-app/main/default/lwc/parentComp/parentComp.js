@@ -1,5 +1,6 @@
 import { LightningElement, track } from 'lwc';
 
+
 export default class ParentComponent extends LightningElement {
     @track selectedType = '';
     @track distributorId = '';
@@ -11,6 +12,7 @@ export default class ParentComponent extends LightningElement {
     @track Error = ''
     @track selectedAgenceId ;
     @track selectedAgenceName ;
+    // @track showForm = false;
 
     handleTypeChange(event) {
         this.selectedType = event.detail; // Récupère le type d'utilisateur sélectionné
@@ -26,6 +28,18 @@ export default class ParentComponent extends LightningElement {
     lookupUpdatehandler (event) {
         this.selectedAgenceId = event.detail ;
         this.selectedAgenceName = event.detail ;
+    }
+    // afficher le formulaire
+    // handleNew() {
+    //     this.showForm = true;
+    // }
+    //annuler la creation 
+    handleCancel() {
+        this.showForm = false; // on ajoutera une logique revenir a la page de creation ou....
+    }
+    handleSave() {
+        // Implémenter la logique pour sauvegarder le formulaire
+        this.showForm = false; // Masquer le formulaire après avoir sauvegardé
     }
     ///////////////////////////// condition d'affichage des composant/////////////////////////////////////
     // validateHelloWorld() {
