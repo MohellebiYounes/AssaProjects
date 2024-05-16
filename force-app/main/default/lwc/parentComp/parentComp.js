@@ -1,6 +1,7 @@
 import { LightningElement, track } from 'lwc';
-
-
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
+import createUser from '@salesforce/apex/UserController.createUser';
+import assignPermissionSetLicenses from '@salesforce/apex/UserController.assignPermissionSetLicenses';
 export default class ParentComponent extends LightningElement {
     @track selectedType = '';
     @track distributorId = '';
@@ -12,6 +13,12 @@ export default class ParentComponent extends LightningElement {
     @track Error = ''
     @track selectedAgenceId ;
     @track selectedAgenceName ;
+    @track nom = '';
+    @track prenom = '';
+    @track civilite = '';
+    @track email = '';
+    @track username = '';
+    @track produit = '';
     // @track showForm = false;
 
     handleTypeChange(event) {
@@ -40,7 +47,61 @@ export default class ParentComponent extends LightningElement {
     handleSave() {
         // Implémenter la logique pour sauvegarder le formulaire
         this.showForm = false; // Masquer le formulaire après avoir sauvegardé
-    }
+
+        //logique de sauvegarde
+         // Appelez la méthode Apex pour créer un nouvel utilisateur
+        createUser({ 
+            username : this.username,
+            firstName : this.nom,
+            lastName : this.prenom,
+            email: this.email,
+            profileName: 'End User'
+         })
+            .then(result => {
+                 // Affichez un message de succès à l'utilisateur
+                 this.showToast('Success', result, 'success');
+                 // Appel de la méthode pour attribuer les permissions
+                //  assignPermissionSetLicenses({ userId: result });
+                })
+            .catch(error => {
+                 // Affichez un message d'erreur à l'utilisateur
+                 this.showToast('Error', error, 'error');
+                 console.error('Erreur lors de la création de l\'utilisateur : ', error);
+                });
+    } 
+     // Méthode pour afficher une notification à l'utilisateur
+        showToast(title, message, variant) {
+         const evt = new ShowToastEvent({
+             title: title,
+             message: message,
+             variant: variant,
+         });
+         this.dispatchEvent(evt);
+        }
+    handleNomUpdate(event) {
+        this.nom = event.detail    }
+
+    // Gestionnaire pour l'événement d'update du champ prénom
+    handlePrenomUpdate(event) {
+        this.prenom = event.detail    }
+
+    // Gestionnaire pour l'événement d'update du champ civilité
+    handleCiviliteUpdate(event) {
+        this.civilite = event.detail    }
+
+    // Gestionnaire pour l'événement d'update du champ email
+    handleEmailUpdate(event) {
+        this.email = event.detail    }
+
+    // Gestionnaire pour l'événement d'update du champ username
+    handleUsernameUpdate(event) {
+        this.username = event.detail    }
+
+    // Gestionnaire pour l'événement d'update du champ produit
+    handleProduitUpdate(event) {
+        this.produit = event.detail    }
+
+        
     ///////////////////////////// condition d'affichage des composant/////////////////////////////////////
     // validateHelloWorld() {
     //     if (this.selectedType) {

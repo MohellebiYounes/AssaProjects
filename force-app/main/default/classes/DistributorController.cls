@@ -28,10 +28,7 @@
 //      }
      
 //  }
-/*
-API : 50
-Source : lwcFactory.com
-*/
+
 public class DistributorController {
     // Method to fetch lookup search result   
     @AuraEnabled(cacheable=true)

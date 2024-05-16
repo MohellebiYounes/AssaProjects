@@ -30,7 +30,15 @@
                     </div>
                     <div class="slds-col slds-size_1-of-1">
                         <div class="slds-box slds-p-around_medium slds-theme_shade">
-                            <c-information-contact-user selected-type={selectedType}></c-information-contact-user>
+                            <c-information-contact-user 
+                            selected-type={selectedType}
+                            onnomupdate={handleNomUpdate}
+                            onprenomupdate={handlePrenomUpdate}
+                            onciviliteupdate={handleCiviliteUpdate}
+                            onemailupdate={handleEmailUpdate}
+                            onusernameupdate={handleUsernameUpdate}
+                            onproduitupdate={handleProduitUpdate}>
+                        </c-information-contact-user>
                         </div>
                     </div>
                 </div>
