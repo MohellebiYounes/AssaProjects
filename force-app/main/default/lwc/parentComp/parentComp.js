@@ -1,7 +1,147 @@
+// import { LightningElement, track } from 'lwc';
+// import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+// import createUser from '@salesforce/apex/UserController.createUser';
+// import assignPermissionSets from '@salesforce/apex/UserController.assignPermissionSets';
+// import assignPermissionSetLicenses from '@salesforce/apex/UserController.assignPermissionSetLicenses';
+
+// export default class ParentComponent extends LightningElement {
+//     @track selectedType = '';
+//     @track distributorId = '';
+//     @track showHelloWorld = true;
+//     @track showDistributeur = false;
+//     @track showSection3 = false;
+//     @track helloWorldValidated = false;
+//     @track distributeurValidated = false;
+//     @track Error = '';
+//     @track selectedAgenceId;
+//     @track selectedAgenceName;
+//     @track nom = '';
+//     @track prenom = '';
+//     @track civilite = '';
+//     @track email = '';
+//     @track username = '';
+//     @track produit = '';
+
+//     handleTypeChange(event) {
+//         this.selectedType = event.detail; // Récupère le type d'utilisateur sélectionné
+//         console.log('Selected Type in handleTypeChange:', this.selectedType);
+//         // this.Error = '';
+//         // this.helloWorldValidated;
+//     }
+
+//     lookupUpdatehandler(event) {
+//         this.distributorId = event.detail; // récupérer l'id du distributeur 
+//         this.Error = '';
+//     }
+
+//     lookupUpdatehandlerAgence(event) {
+//         this.selectedAgenceId = event.detail;
+//         this.selectedAgenceName = event.detail;
+//     }
+
+//     handleCancel() {
+//         this.showForm = false; // On ajoutera une logique pour revenir à la page de création ou autre
+//     }
+
+//     handleSave() {
+//         this.showForm = false; // Masquer le formulaire après avoir sauvegardé
+//         this.showToast('Info', `Selected Type: ${this.selectedType}`, 'info');
+//         console.log('Selected Type in handleSave:', this.selectedType); 
+//         let userId; // Déclaration de userId pour qu'il soit accessible dans toute la méthode handleSave
+
+//         if (this.selectedType === 'Livreur' || this.selectedType === 'Animateur') {
+//         // Appeler la méthode Apex pour créer un nouvel utilisateur
+//         createUser({ 
+//             username: this.username,
+//             firstName: this.nom,
+//             lastName: this.prenom,
+//             email: this.email,
+//             profileName: 'End User'
+//         })
+//         .then(result => {
+//             // Affichez un message de succès à l'utilisateur
+//             this.showToast('Success', 'User created successfully', 'success');
+            
+//             // Capturer l'ID de l'utilisateur créé
+//             userId = result; 
+
+//             // Définir les Permission Sets de base
+//             let permSetNames = ['LightningRetailExecutionStarter', 'MapsUser'];
+//             console.log('Selected Type in then:', this.selectedType); 
+             
+//             // Ajouter des Permission Sets spécifiques si le type est 'livreur'
+//             if (this.selectedType === 'Livreur') {
+//                 permSetNames.push('ActionPlans');
+//             }
+
+//             // Appel de la méthode pour attribuer les Permission Sets
+//             return assignPermissionSets({ permSetNames: permSetNames, userId: userId });
+//         })
+//         .then(() => {
+//             // Affichez un message de succès pour l'attribution des Permission Sets
+//             this.showToast('Success', 'Permission sets assigned successfully', 'success');
+
+//             // Définir les Permission Set Licenses de base
+//             let permSetLicenseNames = ['SFMaps_Maps_LiveMobileTracking', 'IndustriesVisitPsl', 'SFMaps_Maps_Advanced', 'LightningRetailExecutionStarterPsl'];
+
+//             // Appel de la méthode pour attribuer les Permission Set Licenses
+//             return assignPermissionSetLicenses({ permSetLicenseNames: permSetLicenseNames, userId: userId });
+//         })
+//         .then(() => {
+//             // Affichez un message de succès pour l'attribution des Permission Set Licenses
+//             this.showToast('Success', 'Permission set licenses assigned successfully', 'success');
+//         })
+//         .catch(error => {
+//             // Affichez un message d'erreur à l'utilisateur
+//             this.showToast('Error', 'Erreur lors de la création de l\'utilisateur ou de l\'attribution des permissions : ' + (error.body ? error.body.message : error.message), 'error');
+//             console.error('Erreur lors de la création de l\'utilisateur ou de l\'attribution des permissions : ', error);
+//         });
+        
+//     }else {
+
+//     }
+// }
+
+//     showToast(title, message, variant) {
+//         const evt = new ShowToastEvent({
+//             title: title,
+//             message: message,
+//             variant: variant,
+//         });
+//         this.dispatchEvent(evt);
+//     }
+
+//     handleNomUpdate(event) {
+//         this.nom = event.detail;
+//     }
+
+//     handlePrenomUpdate(event) {
+//         this.prenom = event.detail;
+//     }
+
+//     handleCiviliteUpdate(event) {
+//         this.civilite = event.detail;
+//     }
+
+//     handleEmailUpdate(event) {
+//         this.email = event.detail;
+//     }
+
+//     handleUsernameUpdate(event) {
+//         this.username = event.detail;
+//     }
+
+//     handleProduitUpdate(event) {
+//         this.produit = event.detail;
+//     }
+// }
 import { LightningElement, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent'
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import createUser from '@salesforce/apex/UserController.createUser';
+import assignPermissionSets from '@salesforce/apex/UserController.assignPermissionSets';
 import assignPermissionSetLicenses from '@salesforce/apex/UserController.assignPermissionSetLicenses';
+import createContact from '@salesforce/apex/UserController.createContact';
+
 export default class ParentComponent extends LightningElement {
     @track selectedType = '';
     @track distributorId = '';
@@ -10,151 +150,141 @@ export default class ParentComponent extends LightningElement {
     @track showSection3 = false;
     @track helloWorldValidated = false;
     @track distributeurValidated = false;
-    @track Error = ''
-    @track selectedAgenceId ;
-    @track selectedAgenceName ;
+    @track Error = '';
+    @track agenceId;
+    @track agenceName;
     @track nom = '';
     @track prenom = '';
     @track civilite = '';
     @track email = '';
     @track username = '';
     @track produit = '';
-    // @track showForm = false;
 
     handleTypeChange(event) {
         this.selectedType = event.detail; // Récupère le type d'utilisateur sélectionné
-        this.Error = '' ;
-        this.helloWorldValidated ;
+        console.log('Selected Type in handleTypeChange:', this.selectedType);
     }
 
     lookupUpdatehandler(event) {
-        this.distributorId = event.detail; // recuperer l'id du distributeur 
-        this.Error = '' ;
+        this.distributorId = event.detail; // récupérer l'id du distributeur 
+        this.Error = '';
+        console.log('distributeur in handleTypeChange:', this.distributorId);
     }
 
-    lookupUpdatehandler (event) {
-        this.selectedAgenceId = event.detail ;
-        this.selectedAgenceName = event.detail ;
+    lookupUpdatehandlerAgence(event) {
+        this.agenceId = event.detail;
+        console.log('Agence in handleTypeChange:', this.agenceId);
     }
-    // afficher le formulaire
-    // handleNew() {
-    //     this.showForm = true;
-    // }
-    //annuler la creation 
+
     handleCancel() {
-        this.showForm = false; // on ajoutera une logique revenir a la page de creation ou....
+        this.showForm = false; // On ajoutera une logique pour revenir à la page de création ou autre
     }
+
     handleSave() {
-        // Implémenter la logique pour sauvegarder le formulaire
         this.showForm = false; // Masquer le formulaire après avoir sauvegardé
+        this.showToast('Info', `Selected Type: ${this.selectedType}`, 'info');
+        console.log('Selected Type in handleSave:', this.selectedType); 
+        let userId; // Déclaration de userId pour qu'il soit accessible dans toute la méthode handleSave
 
-        //logique de sauvegarde
-         // Appelez la méthode Apex pour créer un nouvel utilisateur
-        createUser({ 
-            username : this.username,
-            firstName : this.nom,
-            lastName : this.prenom,
-            email: this.email,
-            profileName: 'End User'
-         })
+        if (this.selectedType === 'Livreur' || this.selectedType === 'Animateur') {
+            // Appeler la méthode Apex pour créer un nouvel utilisateur
+            createUser({ 
+                username: this.username,
+                firstName: this.nom,
+                lastName: this.prenom,
+                email: this.email,
+                profileName: 'End User'
+            })
             .then(result => {
-                 // Affichez un message de succès à l'utilisateur
-                 this.showToast('Success', result, 'success');
-                 // Appel de la méthode pour attribuer les permissions
-                //  assignPermissionSetLicenses({ userId: result });
-                })
-            .catch(error => {
-                 // Affichez un message d'erreur à l'utilisateur
-                 this.showToast('Error', error, 'error');
-                 console.error('Erreur lors de la création de l\'utilisateur : ', error);
+                // Affichez un message de succès à l'utilisateur
+                this.showToast('Success', 'User created successfully', 'success');
+                
+                // Capturer l'ID de l'utilisateur créé
+                userId = result; 
+
+                // Définir les Permission Sets de base
+                let permSetNames = ['LightningRetailExecutionStarter', 'MapsUser'];
+                console.log('Selected Type in then:', this.selectedType); 
+                
+                // Ajouter des Permission Sets spécifiques si le type est 'livreur'
+                if (this.selectedType === 'Livreur') {
+                    permSetNames.push('ActionPlans');
+                }
+
+                // Appel de la méthode pour attribuer les Permission Sets
+                return assignPermissionSets({ permSetNames: permSetNames, userId: userId });
+            })
+            .then(() => {
+                // Affichez un message de succès pour l'attribution des Permission Sets
+                this.showToast('Success', 'Permission sets assigned successfully', 'success');
+
+                // Définir les Permission Set Licenses de base
+                let permSetLicenseNames = ['SFMaps_Maps_LiveMobileTracking', 'IndustriesVisitPsl', 'SFMaps_Maps_Advanced', 'LightningRetailExecutionStarterPsl'];
+
+                // Appel de la méthode pour attribuer les Permission Set Licenses
+                return assignPermissionSetLicenses({ permSetLicenseNames: permSetLicenseNames, userId: userId });
+            })
+            .then(() => {
+                // Affichez un message de succès pour l'attribution des Permission Set Licenses
+                this.showToast('Success', 'Permission set licenses assigned successfully', 'success');
+                
+                // Appeler la méthode Apex pour créer un nouveau contact
+                return createContact({
+                    civilite: this.civilite,
+                    firstName: this.nom,
+                    lastName: this.prenom,
+                    email: this.email,
+                    userId: userId,
+                    accountId: this.agenceId,
+                    inwiCGC_UserCGC__c: userId
                 });
-    } 
-     // Méthode pour afficher une notification à l'utilisateur
-        showToast(title, message, variant) {
-         const evt = new ShowToastEvent({
-             title: title,
-             message: message,
-             variant: variant,
-         });
-         this.dispatchEvent(evt);
+            })
+            .then(() => {
+                // Affichez un message de succès pour la création du contact
+                this.showToast('Success', 'Contact created successfully', 'success');
+                console.log('Agence in then:', this.agenceId);
+
+            })
+            .catch(error => {
+                // Affichez un message d'erreur à l'utilisateur
+                this.showToast('Error', 'Erreur lors de la création de l\'utilisateur ou de l\'attribution des permissions : ' + (error.body ? error.body.message : error.message), 'error');
+                console.error('Erreur lors de la création de l\'utilisateur ou de l\'attribution des permissions : ', error);
+            });
+        } else {
+            // Gérer le cas où le type sélectionné n'est ni 'Livreur' ni 'Animateur'
         }
+    }
+
+    showToast(title, message, variant) {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+        });
+        this.dispatchEvent(evt);
+    }
+
     handleNomUpdate(event) {
-        this.nom = event.detail    }
+        this.nom = event.detail;
+    }
 
-    // Gestionnaire pour l'événement d'update du champ prénom
     handlePrenomUpdate(event) {
-        this.prenom = event.detail    }
+        this.prenom = event.detail;
+    }
 
-    // Gestionnaire pour l'événement d'update du champ civilité
     handleCiviliteUpdate(event) {
-        this.civilite = event.detail    }
+        this.civilite = event.detail;
+    }
 
-    // Gestionnaire pour l'événement d'update du champ email
     handleEmailUpdate(event) {
-        this.email = event.detail    }
+        this.email = event.detail;
+    }
 
-    // Gestionnaire pour l'événement d'update du champ username
     handleUsernameUpdate(event) {
-        this.username = event.detail    }
+        this.username = event.detail;
+    }
 
-    // Gestionnaire pour l'événement d'update du champ produit
     handleProduitUpdate(event) {
-        this.produit = event.detail    }
-
-        
-    ///////////////////////////// condition d'affichage des composant/////////////////////////////////////
-    // validateHelloWorld() {
-    //     if (this.selectedType) {
-    //         this.helloWorldValidated = true;
-    //     } else {
-    //         this.helloWorldValidated = false;
-    //         this.Error = 'Veuillez sélectionner un type d\'utilisateur.';
-    //     }
-    // }   
-
-    // validateDistributeur() {
-    //     if (this.distributorId) {
-    //         this.distributeurValidated = true;
-    //     } else {
-    //         this.distributeurValidated = false;
-    //         this.Error = 'Veuillez sélectionner un distributeur.';
-    //     }
-    // }
-
-    // nextSection() {
-    //     if (this.showHelloWorld) {
-    //         this.validateHelloWorld();
-    //         if (this.helloWorldValidated) {
-    //             this.showHelloWorld = false;
-    //             this.showDistributeur = true;
-    //         } else {
-    //             // Affichez un message d'erreur ou effectuez d'autres actions en cas d'échec de validation
-    //         }
-    //     } else if (this.showDistributeur) {
-    //         this.validateDistributeur();
-    //         if (this.distributeurValidated) {
-    //             this.showDistributeur = false;
-    //             this.showSection3 = true;
-    //         } else {
-    //             // Affichez un message d'erreur ou effectuez d'autres actions en cas d'échec de validation
-    //         }
-    //     }
-    // }
-
-    // previousSection() {
-    //     if (this.showDistributeur) {
-    //         this.showDistributeur = false;
-    //         this.showHelloWorld = true;
-    //         this.helloWorldValidated = false; // Réinitialisez la validation lorsque vous revenez à la section précédente
-    //         this.Error = ''; // Effacez l'erreur lorsque vous revenez à la section précédente
-            
-    //     } else if (this.showSection3) {
-    //         this.showSection3 = false;
-    //         this.showDistributeur = true;
-    //         this.distributeurValidated = false; // Réinitialisez la validation lorsque vous revenez à la section précédente
-    //         this.Error = ''; // Effacez l'erreur lorsque vous revenez à la section précédente
-    //         this.distributorId = '' ;
-    //     }
-    // }
+        this.produit = event.detail;
+    }
 }
-

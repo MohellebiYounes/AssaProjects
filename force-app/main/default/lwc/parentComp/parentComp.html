@@ -23,7 +23,7 @@
                             <div class="slds-form-element slds-size_1-of-1">
                                 <label class="slds-form-element__label" for="agence">Agence</label>
                                 <div class="slds-form-element__control">
-                                    <c-agence selected-type={selectedType} distributor-id={distributorId} onlookupupdate={lookupUpdatehandler}></c-agence>
+                                    <c-agence selected-type={selectedType} distributor-id={distributorId} onlookupupdate={lookupUpdatehandlerAgence}></c-agence>
                                 </div>
                             </div>
                         </div>
@@ -45,7 +45,7 @@
             </div>
             <footer class="slds-m-top_medium slds-text-align_center">
                 <lightning-button label="Cancel" onclick={handleCancel} variant="neutral"></lightning-button>
-                <lightning-button label="Save" onclick={handleSave} variant="brand"></lightning-button>
+                <lightning-button label="Save" onclick={handleSave} selected-type={selectedType} variant="brand"></lightning-button>
             </footer>
         <!-- </template> -->
     </div>

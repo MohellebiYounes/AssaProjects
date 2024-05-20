@@ -168,8 +168,8 @@ export default class agence extends LightningElement {
     @api selectedType = '' ;
     @api distributorId = '' ;
     // agence selectionné  
-    @api agenceId = '';
-    @api agenceName = '';
+    @track agenceId = '';
+    @track agenceName = '';
 
     // private properties 
     lstResult = []; // to store list of returned records   
@@ -242,7 +242,7 @@ export default class agence extends LightningElement {
    handleRemove(){
     this.searchKey = '';    
     this.selectedRecord = {};
-    this.lookupUpdatehandler(undefined); // update value on parent component as well from helper function 
+    this.lookupUpdatehandlerAgence(undefined); // update value on parent component as well from helper function 
     
     // remove selected pill and display input field again 
     const searchBoxWrapper = this.template.querySelector('.searchBoxWrapper');
@@ -258,7 +258,7 @@ export default class agence extends LightningElement {
 handelSelectedRecord(event){   
      var objId = event.target.getAttribute('data-recid'); // get selected record Id 
      this.selectedRecord = this.lstResult.find(data => data.Id === objId); // find selected record from list 
-     this.lookupUpdatehandler(this.selectedRecord); // update value on parent component as well from helper function 
+     this.lookupUpdatehandlerAgence(this.selectedRecord); // update value on parent component as well from helper function 
      this.handelSelectRecordHelper(); // helper function to show/hide lookup result container on UI
 }
 
@@ -281,7 +281,7 @@ handelSelectRecordHelper(){
 //     console.log('Type d\'utilisateur sélectionné:', selectedType);
 // }
 // send selected lookup record to parent component using custom event
-lookupUpdatehandler(value){    
+lookupUpdatehandlerAgence(value){    
     const oEvent = new CustomEvent('lookupupdate',
     {
         'detail': {selectedRecord: value}
@@ -290,14 +290,14 @@ lookupUpdatehandler(value){
 this.dispatchEvent(oEvent);
 }
 // agence select 
-lookupUpdatehandler(value) {    
+lookupUpdatehandlerAgence(value) {    
     if (value && value.Id) {
-        this.agenceName = value.Name;
-        console.log('Selected Agence: ' + this.agenceName); // Ajout du console.log
-        const lookupAgenceUpdateEvent = new CustomEvent('lookupAgenceupdate', {
-            detail: this.agenceName
+        this.agenceId = value.Id;
+        console.log('Selected Distributor ID: ' + this.agenceId); // Ajout du console.log
+        const lookupUpdateEvent = new CustomEvent('lookupupdate', {
+            detail: this.agenceId
         });
-        this.dispatchEvent(lookupAgenceUpdateEvent);
+        this.dispatchEvent(lookupUpdateEvent);
     }
 }}
 
