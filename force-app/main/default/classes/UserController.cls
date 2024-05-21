@@ -131,7 +131,7 @@ public with sharing class UserController {
         }
     }
     @AuraEnabled
-    public static void createContact(String civilite, String firstName, String lastName, String email, Id userId, Id accountId) {
+    public static string createContact(String civilite, String firstName, String lastName, String email, Id userId, Id accountId) {
         try {
             // Créer un nouveau contact avec les informations fournies
             Contact newContact = new Contact(
@@ -145,9 +145,33 @@ public with sharing class UserController {
 
             // Insérer le nouveau contact dans Salesforce
             insert newContact;
+             // Retourner l'ID du Contact créé
+            return newContact.Id ;
         } catch (Exception e) {
             // Retourner un message d'erreur en cas d'échec
             throw new AuraHandledException('Erreur lors de la création du contact : ' + e.getMessage());
         }
     }
-}
+
+    @AuraEnabled
+    public static void updateAccountContactRelation(String contactId, String accountId, String newRole) {
+        try {
+            // Rechercher la relation AccountContactRelation existante
+            AccountContactRelation acr = [
+                SELECT Id, Roles 
+                FROM AccountContactRelation 
+                WHERE ContactId = :contactId AND AccountId = :accountId
+                LIMIT 1
+            ];
+
+            // Mettre à jour le rôle de la relation
+            acr.Roles = newRole;
+            update acr;
+        } catch (QueryException qe) {
+            // Gestion de l'erreur si aucune relation n'est trouvée
+            throw new AuraHandledException('Aucune relation AccountContactRelation trouvée pour le contact et le compte spécifiés.');
+        } catch (Exception e) {
+            // Gestion des erreurs générales
+            throw new AuraHandledException('Erreur lors de la mise à jour de la relation AccountContactRelation : ' + e.getMessage());
+        }
+}}

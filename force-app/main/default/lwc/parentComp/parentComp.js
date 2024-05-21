@@ -141,6 +141,8 @@ import createUser from '@salesforce/apex/UserController.createUser';
 import assignPermissionSets from '@salesforce/apex/UserController.assignPermissionSets';
 import assignPermissionSetLicenses from '@salesforce/apex/UserController.assignPermissionSetLicenses';
 import createContact from '@salesforce/apex/UserController.createContact';
+import updateAccountContactRelation from '@salesforce/apex/UserController.updateAccountContactRelation';
+
 
 export default class ParentComponent extends LightningElement {
     @track selectedType = '';
@@ -185,7 +187,8 @@ export default class ParentComponent extends LightningElement {
         this.showToast('Info', `Selected Type: ${this.selectedType}`, 'info');
         console.log('Selected Type in handleSave:', this.selectedType); 
         let userId; // Déclaration de userId pour qu'il soit accessible dans toute la méthode handleSave
-
+        let contactId; 
+    
         if (this.selectedType === 'Livreur' || this.selectedType === 'Animateur') {
             // Appeler la méthode Apex pour créer un nouvel utilisateur
             createUser({ 
@@ -201,7 +204,7 @@ export default class ParentComponent extends LightningElement {
                 
                 // Capturer l'ID de l'utilisateur créé
                 userId = result; 
-
+    
                 // Définir les Permission Sets de base
                 let permSetNames = ['LightningRetailExecutionStarter', 'MapsUser'];
                 console.log('Selected Type in then:', this.selectedType); 
@@ -210,17 +213,23 @@ export default class ParentComponent extends LightningElement {
                 if (this.selectedType === 'Livreur') {
                     permSetNames.push('ActionPlans');
                 }
-
+                // Ajouter des Permission Sets spécifiques si le type est 'Animateur' et le produit est 'adsl' ou 'ftth'
+             if (this.selectedType === 'Animateur' && this.produit === 'ADSL') {
+                permSetNames.push('ADSL');
+             } else if (this.selectedType === 'Animateur' && this.produit === 'FTTH') {
+                permSetNames.push('FTTH');
+              }
+    
                 // Appel de la méthode pour attribuer les Permission Sets
                 return assignPermissionSets({ permSetNames: permSetNames, userId: userId });
             })
             .then(() => {
                 // Affichez un message de succès pour l'attribution des Permission Sets
                 this.showToast('Success', 'Permission sets assigned successfully', 'success');
-
+    
                 // Définir les Permission Set Licenses de base
                 let permSetLicenseNames = ['SFMaps_Maps_LiveMobileTracking', 'IndustriesVisitPsl', 'SFMaps_Maps_Advanced', 'LightningRetailExecutionStarterPsl'];
-
+    
                 // Appel de la méthode pour attribuer les Permission Set Licenses
                 return assignPermissionSetLicenses({ permSetLicenseNames: permSetLicenseNames, userId: userId });
             })
@@ -239,11 +248,25 @@ export default class ParentComponent extends LightningElement {
                     inwiCGC_UserCGC__c: userId
                 });
             })
-            .then(() => {
-                // Affichez un message de succès pour la création du contact
+            .then(result => {
+                // Capturer l'ID du contact créé
+                contactId = result;
                 this.showToast('Success', 'Contact created successfully', 'success');
-                console.log('Agence in then:', this.agenceId);
-
+                console.log('Contact created with ID:', contactId);
+    
+                // Si le type sélectionné est 'Livreur', créer la relation AccountContactRelation
+                if (this.selectedType === 'Livreur') {
+                    console.log('Selected type is Livreur, creating AccountContactRelation');
+                    return updateAccountContactRelation({
+                        contactId: contactId,
+                        accountId: this.agenceId,
+                        role: 'inwiB2C_ChefEquipe'
+                    })
+                    .then(() => {
+                        // Affichez un message de succès pour la création de la relation AccountContactRelation
+                        this.showToast('Success', 'Account-Contact relation created successfully', 'success');
+                    });
+                }
             })
             .catch(error => {
                 // Affichez un message d'erreur à l'utilisateur
@@ -252,8 +275,11 @@ export default class ParentComponent extends LightningElement {
             });
         } else {
             // Gérer le cas où le type sélectionné n'est ni 'Livreur' ni 'Animateur'
+            this.showToast('Error', 'Invalid user type selected', 'error');
+            console.error('Invalid user type selected:', this.selectedType);
         }
     }
+    
 
     showToast(title, message, variant) {
         const evt = new ShowToastEvent({
