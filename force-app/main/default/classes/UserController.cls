@@ -1,7 +1,7 @@
 public with sharing class UserController {
 
     @AuraEnabled
-    public static String createUser(String username, String firstName, String lastName, String profileName, String email) {
+    public static String createUser(String username, String firstName, String lastName, String profileName, String email, Id contactId) {
         try {
             // Récupérer l'ID du profil en fonction de son nom
             Id userProfileId = [SELECT Id FROM Profile WHERE Name = :profileName LIMIT 1].Id;
@@ -17,7 +17,8 @@ public with sharing class UserController {
                 LocaleSidKey = 'en_US', // Exemple de valeur pour le champ Locale
                 EmailEncodingKey = 'UTF-8', // Exemple de valeur pour le champ Email Encoding
                 ProfileId = userProfileId, // Utiliser l'ID du profil récupéré
-                LanguageLocaleKey = 'en_US' // Exemple de valeur pour le champ Language
+                LanguageLocaleKey = 'en_US', // Exemple de valeur pour le champ Language
+                ContactId = contactId
             );
 
             // Insérer le nouvel utilisateur dans Salesforce

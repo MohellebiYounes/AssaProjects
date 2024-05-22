@@ -196,7 +196,8 @@ export default class ParentComponent extends LightningElement {
                 firstName: this.nom,
                 lastName: this.prenom,
                 email: this.email,
-                profileName: 'End User'
+                profileName: 'End User',
+                contactId: null 
             })
             .then(result => {
                 // Affichez un message de succès à l'utilisateur
@@ -273,11 +274,46 @@ export default class ParentComponent extends LightningElement {
                 this.showToast('Error', 'Erreur lors de la création de l\'utilisateur ou de l\'attribution des permissions : ' + (error.body ? error.body.message : error.message), 'error');
                 console.error('Erreur lors de la création de l\'utilisateur ou de l\'attribution des permissions : ', error);
             });
+        } else  if (this.selectedType === 'Utilisateur BO') {
+            createContact({
+                civilite: this.civilite,
+                firstName: this.nom,
+                lastName: this.prenom,
+                email: this.email,
+                userId: userId,
+                accountId: this.agenceId,
+                inwiCGC_UserCGC__c: null
+            })
+            .then(result => {
+                // Capturer l'ID du contact créé
+                contactId = result;
+                this.showToast('Success', 'Contact for Utilisateur BO created successfully', 'success');
+                console.log('Contact created with ID:', contactId);
+
+                // Créer l'utilisateur Salesforce avec le profil "BO Distributeur"
+                return createUser({
+                    username: this.username,
+                    firstName: this.nom,
+                    lastName: this.prenom,
+                    email: this.email,
+                    profileName: 'BO Distributeur',
+                    contactId: contactId 
+                });
+            })
+            .then(result => {
+                // Affichez un message de succès à l'utilisateur pour la création de l'utilisateur Salesforce
+                this.showToast('Success', 'User for Utilisateur BO created successfully', 'success');
+                console.log('User created with ID:', result);
+            })
+            .catch(error => {
+                // Affichez un message d'erreur à l'utilisateur
+                this.showToast('Error', 'Erreur lors de la création du contact ou de l\'utilisateur Utilisateur BO : ' + (error.body ? error.body.message : error.message), 'error');
+                console.error('Erreur lors de la création du contact ou de l\'utilisateur Utilisateur BO : ', error);
+            });
         } else {
-            // Gérer le cas où le type sélectionné n'est ni 'Livreur' ni 'Animateur'
-            this.showToast('Error', 'Invalid user type selected', 'error');
-            console.error('Invalid user type selected:', this.selectedType);
+            
         }
+        
     }
     
 
