@@ -252,6 +252,11 @@ export default class agence extends LightningElement {
     const pillDiv = this.template.querySelector('.pillDiv');
      pillDiv.classList.remove('slds-show');
      pillDiv.classList.add('slds-hide');
+
+     const removeAgenceEvent = new CustomEvent('lookupupdate', {
+        detail: '' // Send an empty string to indicate the distributor has been removed
+    });
+    this.dispatchEvent(removeAgenceEvent);
   }
 
   // method to update selected record from search result 
@@ -273,7 +278,8 @@ handelSelectRecordHelper(){
 
      const pillDiv = this.template.querySelector('.pillDiv');
      pillDiv.classList.remove('slds-hide');
-     pillDiv.classList.add('slds-show');     
+     pillDiv.classList.add('slds-show');    
+    
 }
 // handleUserTypeChange(selectedType) {
 //     this.selectedType = selectedType;
@@ -293,7 +299,6 @@ this.dispatchEvent(oEvent);
 lookupUpdatehandlerAgence(value) {    
     if (value && value.Id) {
         this.agenceId = value.Id;
-        console.log('Selected Distributor ID: ' + this.agenceId); // Ajout du console.log
         const lookupUpdateEvent = new CustomEvent('lookupupdate', {
             detail: this.agenceId
         });

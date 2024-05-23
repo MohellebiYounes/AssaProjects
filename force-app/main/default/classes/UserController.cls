@@ -175,4 +175,46 @@ public with sharing class UserController {
             // Gestion des erreurs générales
             throw new AuraHandledException('Erreur lors de la mise à jour de la relation AccountContactRelation : ' + e.getMessage());
         }
-}}
+    } 
+
+    // recherche le nom de la queue depuis l'agence 
+    @AuraEnabled
+    public static String getAgenceQueueName(Id agenceId) {
+        try {
+            // Récupérer le nom de la file d'attente depuis l'agence en utilisant SOQL
+            Account agence = [SELECT InwiB2C_Queue__c FROM Account WHERE Id = :agenceId LIMIT 1];
+            if (agence == null) {
+                throw new AuraHandledException('Aucune agence trouvée pour l\'ID spécifié.');
+            }
+            String queueName = agence.InwiB2C_Queue__c;
+            if (String.isBlank(queueName)) {
+                throw new AuraHandledException('Aucun nom de file d\'attente trouvé pour l\'agence spécifiée.');
+            }
+            return queueName;
+        } catch (QueryException e) {
+            throw new AuraHandledException('Erreur lors de la récupération du nom de la file d\'attente depuis l\'agence : ' + e.getMessage());
+        }
+    }
+
+    // ajout user dans la queue 
+    @AuraEnabled
+    public static void addUserToQueue(String userId, String queueName) {
+        try {
+            // Vérifier si la file d'attente existe
+            Group queue = [SELECT Id FROM Group WHERE DeveloperName = :queueName AND Type = 'Queue' LIMIT 1];
+            if (queue != null) {
+                // Ajouter l'utilisateur à la file d'attente
+                GroupMember queueMember = new GroupMember(
+                    GroupId = queue.Id,
+                    UserOrGroupId = userId
+                );
+                insert queueMember;
+            } else {
+                throw new AuraHandledException('File d\'attente non trouvée avec le nom : ' + queueName);
+            }
+        } catch (Exception e) {
+            throw new AuraHandledException('Erreur lors de l\'ajout de l\'utilisateur à la file d\'attente : ' + e.getMessage());
+        }
+    }
+
+  }  

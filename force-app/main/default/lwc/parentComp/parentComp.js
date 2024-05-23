@@ -142,6 +142,9 @@ import assignPermissionSets from '@salesforce/apex/UserController.assignPermissi
 import assignPermissionSetLicenses from '@salesforce/apex/UserController.assignPermissionSetLicenses';
 import createContact from '@salesforce/apex/UserController.createContact';
 import updateAccountContactRelation from '@salesforce/apex/UserController.updateAccountContactRelation';
+import addUserToQueue from '@salesforce/apex/UserController.addUserToQueue' ; 
+import getAgenceQueueName from '@salesforce/apex/UserController.getAgenceQueueName' ; 
+
 
 
 export default class ParentComponent extends LightningElement {
@@ -168,13 +171,15 @@ export default class ParentComponent extends LightningElement {
     }
 
     lookupUpdatehandler(event) {
-        this.distributorId = event.detail; // récupérer l'id du distributeur 
+        const detail = event.detail;
+        this.distributorId = detail ? detail : ''; // Set to empty string if distributor is removed
         this.Error = '';
-        console.log('distributeur in handleTypeChange:', this.distributorId);
+        console.log('distributeur in lookupUpdatehandler:', this.distributorId);
     }
 
     lookupUpdatehandlerAgence(event) {
-        this.agenceId = event.detail;
+        const detail = event.detail ;
+        this.agenceId = detail ? detail : '';
         console.log('Agence in handleTypeChange:', this.agenceId);
     }
 
@@ -301,14 +306,28 @@ export default class ParentComponent extends LightningElement {
                 });
             })
             .then(result => {
-                // Affichez un message de succès à l'utilisateur pour la création de l'utilisateur Salesforce
-                this.showToast('Success', 'User for Utilisateur BO created successfully', 'success');
-                console.log('User created with ID:', result);
+                userId = result ;
+                // Fetch Queue Name from Agence
+                return getAgenceQueueName({ agenceId: this.agenceId });
+            })
+            .then(queueName => {
+                if (queueName) {
+                    // Add User to Queue
+                    return addUserToQueue({
+                        userId: userId,
+                        queueName: queueName
+                    });
+                } else {
+                    throw new Error('Aucun nom de file d\'attente trouvé pour l\'agence spécifiée.');
+                }
+            })
+            .then(() => {
+                this.showToast('Success', 'User for Utilisateur BO created successfully and added to Queue', 'success');
+                console.log('User created for Utilisateur BO and added to Queue');
             })
             .catch(error => {
-                // Affichez un message d'erreur à l'utilisateur
-                this.showToast('Error', 'Erreur lors de la création du contact ou de l\'utilisateur Utilisateur BO : ' + (error.body ? error.body.message : error.message), 'error');
-                console.error('Erreur lors de la création du contact ou de l\'utilisateur Utilisateur BO : ', error);
+                this.showToast('Error', 'Erreur lors de la création du contact ou de l\'ajout à la file d\'attente : ' + (error.body ? error.body.message : error.message), 'error');
+                console.error('Erreur lors de la création du contact ou de l\'ajout à la file d\'attente : ', error);
             });
         } else {
             

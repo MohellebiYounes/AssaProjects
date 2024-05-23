@@ -96,7 +96,13 @@ export default class distributeur extends LightningElement {
      const pillDiv = this.template.querySelector('.pillDiv');
      pillDiv.classList.remove('slds-show');
      pillDiv.classList.add('slds-hide');
-  }
+
+    const removeEvent = new CustomEvent('lookupupdate', {
+        detail: '' // Send an empty string to indicate the distributor has been removed
+    });
+    this.dispatchEvent(removeEvent);
+}
+
 
   // method to update selected record from search result 
 handelSelectedRecord(event){   
@@ -132,7 +138,6 @@ this.dispatchEvent(oEvent);
 lookupUpdatehandler(value) {    
     if (value && value.Id) {
         this.distributorId = value.Id;
-        console.log('Selected Distributor ID: ' + this.distributorId); // Ajout du console.log
         const lookupUpdateEvent = new CustomEvent('lookupupdate', {
             detail: this.distributorId
         });
