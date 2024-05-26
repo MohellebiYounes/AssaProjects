@@ -253,11 +253,11 @@ export default class agence extends LightningElement {
      pillDiv.classList.remove('slds-show');
      pillDiv.classList.add('slds-hide');
 
-     const removeAgenceEvent = new CustomEvent('lookupupdate', {
-        detail: '' // Send an empty string to indicate the distributor has been removed
+    const removeAgenceEvent = new CustomEvent('lookupupdate', {
+        detail: '' // Send an empty string to indicate the agence has been removed
     });
     this.dispatchEvent(removeAgenceEvent);
-  }
+ }
 
   // method to update selected record from search result 
 handelSelectedRecord(event){   
@@ -278,8 +278,7 @@ handelSelectRecordHelper(){
 
      const pillDiv = this.template.querySelector('.pillDiv');
      pillDiv.classList.remove('slds-hide');
-     pillDiv.classList.add('slds-show');    
-    
+     pillDiv.classList.add('slds-show');     
 }
 // handleUserTypeChange(selectedType) {
 //     this.selectedType = selectedType;
@@ -295,6 +294,7 @@ lookupUpdatehandlerAgence(value){
 );
 this.dispatchEvent(oEvent);
 }
+
 // agence select 
 lookupUpdatehandlerAgence(value) {    
     if (value && value.Id) {
