@@ -2,6 +2,9 @@ import { LightningElement, track, api} from 'lwc';
 
 export default class TypeUser extends LightningElement {
     @track selectedType = ''; // Ne pas définir comme @api
+    @track errorMessage = ''; // property to hold error message
+    @api required = false;  // property to make the field required
+
 
     get options() {
         return [
@@ -19,8 +22,8 @@ export default class TypeUser extends LightningElement {
     }
 
     @api
-    validateLookup() {
-        const isValid = !!this.selectedRecord.Id;
+    validateType() {
+        const isValid = !!this.selectedType;
         this.errorMessage = this.required && !isValid ? 'This field is required.' : '';
         return isValid;
     }

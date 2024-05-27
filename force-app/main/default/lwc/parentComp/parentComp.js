@@ -50,30 +50,24 @@ export default class ParentComponent extends LightningElement {
     }
 
     handleSave() {
-    // Validate the required lookup field
-    const agenceComponent = this.template.querySelector('c-agence');
-    const isAgenceValid = agenceComponent && agenceComponent.validateLookup();
 
-    // Validate the Distributeur component
-    const distributeurComponent = this.template.querySelector('c-distributeur');
-        // Validate the typeuser component
-    const typeUserComponent = this.template.querySelector('c-type-user');
-
-
-
-    const isDistributeurValid = distributeurComponent && distributeurComponent.validateLookup();
-    const isTypeUserValid = typeUserComponent && typeUserComponent.validateLookup() ;
-
-
-
-
-    // Check if both components are not valid
-    if (!isAgenceValid && !isDistributeurValid && !isTypeUserValid) {
-        // Both fields are required
-        return;
-    }
-
-
+        const agenceComponent = this.template.querySelector('c-agence');
+        const isAgenceValid = agenceComponent && agenceComponent.validateLookup();
+    
+        const distributeurComponent = this.template.querySelector('c-distributeur');
+        const isDistributeurValid = distributeurComponent && distributeurComponent.validateLookup();
+    
+        const typeUserComponent = this.template.querySelector('c-type-user');
+        const isTypeUserValid = typeUserComponent && typeUserComponent.validateType();
+    
+        const contactUserComponent = this.template.querySelector('c-information-contact-user');
+        const isContactUserValid = contactUserComponent && contactUserComponent.validateFields();
+    
+        if (!isAgenceValid || !isDistributeurValid || !isTypeUserValid || !isContactUserValid) {
+            this.showToast('Erreur', 'Veuillez remplir tous les champs obligatoires.', 'error');
+            return;
+        }
+        
         this.showForm = false; // Masquer le formulaire après avoir sauvegardé
         this.showToast('Info', `Selected Type: ${this.selectedType}`, 'info');
         console.log('Selected Type in handleSave:', this.selectedType); 
