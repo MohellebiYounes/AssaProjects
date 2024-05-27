@@ -11,19 +11,19 @@
                             <div class="slds-form-element slds-size_1-of-1">
                                 <label class="slds-form-element__label" for="type">Type</label>
                                 <div class="slds-form-element__control">
-                                    <c-type-user ontypechange={handleTypeChange}></c-type-user>
+                                    <c-type-user ontypechange={handleTypeChange}  required="true" ></c-type-user>
                                 </div>
                             </div>
                             <div class="slds-form-element slds-size_1-of-1">
                                 <label class="slds-form-element__label" for="distributor">Distributor</label>
                                 <div class="slds-form-element__control">
-                                    <c-distributeur onlookupupdate={lookupUpdatehandler}></c-distributeur>
+                                    <c-distributeur onlookupupdate={lookupUpdatehandler} required="true"></c-distributeur>
                                 </div>
                             </div>
                             <div class="slds-form-element slds-size_1-of-1">
                                 <label class="slds-form-element__label" for="agence">Agence</label>
                                 <div class="slds-form-element__control">
-                                    <c-agence selected-type={selectedType} distributor-id={distributorId} onlookupupdate={lookupUpdatehandlerAgence}></c-agence>
+                                    <c-agence selected-type={selectedType} distributor-id={distributorId} onlookupupdate={lookupUpdatehandlerAgence} required="true"></c-agence>
                                 </div>
                             </div>
                         </div>

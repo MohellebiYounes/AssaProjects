@@ -1,4 +1,3 @@
-
 import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import createUser from '@salesforce/apex/UserController.createUser';
@@ -8,8 +7,6 @@ import createContact from '@salesforce/apex/UserController.createContact';
 import updateAccountContactRelation from '@salesforce/apex/UserController.updateAccountContactRelation';
 import addUserToQueue from '@salesforce/apex/UserController.addUserToQueue' ; 
 import getAgenceQueueName from '@salesforce/apex/UserController.getAgenceQueueName' ; 
-
-
 
 export default class ParentComponent extends LightningElement {
     @track selectedType = '';
@@ -33,9 +30,8 @@ export default class ParentComponent extends LightningElement {
     handleTypeChange(event) {
         this.selectedType = event.detail; // Récupère le type d'utilisateur sélectionné
         console.log('Selected Type in handleTypeChange:', this.selectedType);
-
     }
-    
+
     lookupUpdatehandler(event) {
         const detail = event.detail;
         this.distributorId = detail ? detail : ''; // Set to empty string if distributor is removed
@@ -54,6 +50,30 @@ export default class ParentComponent extends LightningElement {
     }
 
     handleSave() {
+    // Validate the required lookup field
+    const agenceComponent = this.template.querySelector('c-agence');
+    const isAgenceValid = agenceComponent && agenceComponent.validateLookup();
+
+    // Validate the Distributeur component
+    const distributeurComponent = this.template.querySelector('c-distributeur');
+        // Validate the typeuser component
+    const typeUserComponent = this.template.querySelector('c-type-user');
+
+
+
+    const isDistributeurValid = distributeurComponent && distributeurComponent.validateLookup();
+    const isTypeUserValid = typeUserComponent && typeUserComponent.validateLookup() ;
+
+
+
+
+    // Check if both components are not valid
+    if (!isAgenceValid && !isDistributeurValid && !isTypeUserValid) {
+        // Both fields are required
+        return;
+    }
+
+
         this.showForm = false; // Masquer le formulaire après avoir sauvegardé
         this.showToast('Info', `Selected Type: ${this.selectedType}`, 'info');
         console.log('Selected Type in handleSave:', this.selectedType); 

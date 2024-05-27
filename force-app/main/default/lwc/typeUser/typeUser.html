@@ -1,11 +1,17 @@
 <template>
-    <lightning-card title="Type d'Utilisateur" icon-name="standard:user"></lightning-card>
-    <div class="UserType"></div>
-    <lightning-combobox
-        name="typeUtilisateur"
-        label="Type d'Utilisateur"
-        placeholder="Sélectionner le type d'utilisateur"
-        options={options}
-        onchange={handleTypeChange}>
-    </lightning-combobox>
+    <lightning-card title="Type d'Utilisateur" icon-name="standard:user">
+        <div class="UserType"></div>
+        <lightning-combobox
+            name="typeUtilisateur"
+            label="Type d'Utilisateur"
+            placeholder="Sélectionner le type d'utilisateur"
+            options={options}
+            value={selectedType}
+            onchange={handleTypeChange}
+            required>
+        </lightning-combobox>
+        <template if:true={errorMessage}>
+            <div class="slds-form-element__help slds-text-color_error">{errorMessage}</div>
+        </template>
+    </lightning-card>
 </template>
