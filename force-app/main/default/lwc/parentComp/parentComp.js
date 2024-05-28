@@ -30,7 +30,12 @@ export default class ParentComponent extends LightningElement {
     handleTypeChange(event) {
         this.selectedType = event.detail; // Récupère le type d'utilisateur sélectionné
         console.log('Selected Type in handleTypeChange:', this.selectedType);
+        this.template.querySelector('c-agence').reset();
+        this.agenceId = ''; 
+        console.log('Agence in handleTypeChange:', this.agenceId);
+
     }
+
 
     lookupUpdatehandler(event) {
         const detail = event.detail;
@@ -42,7 +47,7 @@ export default class ParentComponent extends LightningElement {
     lookupUpdatehandlerAgence(event) {
         const detail = event.detail ;
         this.agenceId = detail ? detail : '';
-        console.log('Agence in handleTypeChange:', this.agenceId);
+        console.log('Agence in handleAgenceChange:', this.agenceId);
     }
 
     handleCancel() {
