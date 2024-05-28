@@ -121,4 +121,20 @@ export default class InformationContactUser extends LightningElement {
 
         return isValid;
     }
+    @api
+    reset() {
+        this.nom = '';
+        this.prenom = '';
+        this.civilite = '';
+        this.email = '';
+        this.username = '';
+        this.produit = '';
+
+        this.errorMessageCivilite = '';
+        this.errorMessageNom = '';
+        this.errorMessagePrenom = '';
+        this.errorMessageEmail = '';
+        this.errorMessageUsername = '';
+        this.errorMessageProduit = '';
+    }
 }

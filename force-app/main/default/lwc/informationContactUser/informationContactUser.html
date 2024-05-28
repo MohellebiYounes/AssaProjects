@@ -34,7 +34,7 @@
             </div>
 
             <div class="slds-form-element">
-                <label class="slds-form-element__label" for="username">Username <abbr class="slds-required" title="required" if:true={required}>*</abbr></label>
+                <label class="slds-form-element__label" for="username">Username <abbr class="slds-required" title="required">*</abbr></label>
                 <lightning-input id="username" name="username" value={username} onchange={handleUsernameChange}></lightning-input>
                 <template if:true={errorMessageUsername}>
                     <div class="slds-form-element__help slds-text-color_error">{errorMessageUsername}</div>

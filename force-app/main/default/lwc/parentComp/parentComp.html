@@ -11,19 +11,19 @@
                             <div class="slds-form-element slds-size_1-of-1">
                                 <label class="slds-form-element__label" for="type">Type</label>
                                 <div class="slds-form-element__control">
-                                    <c-type-user ontypechange={handleTypeChange}  required="true" ></c-type-user>
+                                    <c-type-user  ref="typeUserComponent" ontypechange={handleTypeChange}  required="true" ></c-type-user>
                                 </div>
                             </div>
                             <div class="slds-form-element slds-size_1-of-1">
                                 <label class="slds-form-element__label" for="distributor">Distributor</label>
                                 <div class="slds-form-element__control">
-                                    <c-distributeur onlookupupdate={lookupUpdatehandler} required="true"></c-distributeur>
+                                    <c-distributeur ref="distributeurComponent" onlookupupdate={lookupUpdatehandler} required="true"></c-distributeur>
                                 </div>
                             </div>
                             <div class="slds-form-element slds-size_1-of-1">
                                 <label class="slds-form-element__label" for="agence">Agence</label>
                                 <div class="slds-form-element__control">
-                                    <c-agence selected-type={selectedType} distributor-id={distributorId} onlookupupdate={lookupUpdatehandlerAgence} required="true"></c-agence>
+                                    <c-agence ref="agenceComponent" selected-type={selectedType} distributor-id={distributorId} onlookupupdate={lookupUpdatehandlerAgence} required="true"></c-agence>
                                 </div>
                             </div>
                         </div>
@@ -38,15 +38,15 @@
                             onemailupdate={handleEmailUpdate}
                             onusernameupdate={handleUsernameUpdate}
                             onproduitupdate={handleProduitUpdate}
-                            required="true">
-                            
+                            required="true"
+                            ref="contactUserComponent">
                         </c-information-contact-user>
                         </div>
                     </div>
                 </div>
             </div>
             <footer class="slds-m-top_medium slds-text-align_center">
-                <lightning-button label="Cancel" onclick={handleCancel} variant="neutral"></lightning-button>
+                <lightning-button label="Cancel" onclick={handleCancel} variant="neutral" selected-type={selectedType}></lightning-button>
                 <lightning-button label="Save" onclick={handleSave} selected-type={selectedType} variant="brand"></lightning-button>
             </footer>
         <!-- </template> -->

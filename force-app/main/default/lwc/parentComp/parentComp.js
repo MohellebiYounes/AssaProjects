@@ -46,7 +46,25 @@ export default class ParentComponent extends LightningElement {
     }
 
     handleCancel() {
-        this.showForm = false; // On ajoutera une logique pour revenir à la page de création ou autre
+        // Réinitialiser toutes les valeurs des champs
+        this.selectedType = '';
+        this.distributorId = '';
+        this.agenceId = '';
+        this.nom = '';
+        this.prenom = '';
+        this.civilite = '';
+        this.email = '';
+        this.username = '';
+        this.produit = '';
+    
+        
+    
+        // Réinitialiser les messages d'erreur si nécessaire
+        this.template.querySelector('c-agence').reset();
+        this.template.querySelector('c-distributeur').reset();
+        this.template.querySelector('c-information-contact-user').reset();
+        this.template.querySelector('c-type-user').reset();
+
     }
 
     handleSave() {
@@ -64,10 +82,9 @@ export default class ParentComponent extends LightningElement {
         const isContactUserValid = contactUserComponent && contactUserComponent.validateFields();
     
         if (!isAgenceValid || !isDistributeurValid || !isTypeUserValid || !isContactUserValid) {
-            this.showToast('Erreur', 'Veuillez remplir tous les champs obligatoires.', 'error');
             return;
         }
-        
+
         this.showForm = false; // Masquer le formulaire après avoir sauvegardé
         this.showToast('Info', `Selected Type: ${this.selectedType}`, 'info');
         console.log('Selected Type in handleSave:', this.selectedType); 
