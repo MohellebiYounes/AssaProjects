@@ -24,6 +24,7 @@ body, html {
     padding: 2rem; /* Ajoute de l'espace intérieur */
     box-sizing: border-box; /* Inclut le padding dans la largeur/hauteur */
     position: relative; /* Permet de positionner les boutons */
+    
 }
 
 .custom-grid {
@@ -74,5 +75,6 @@ body, html {
     background-color: rgba(179, 72, 181, 1) ; /* Couleur de la ligne de séparation */
     margin-bottom: 1rem; /* Espacement sous la ligne de séparation */
 }
+
 
 
