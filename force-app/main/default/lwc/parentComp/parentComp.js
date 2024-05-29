@@ -42,6 +42,9 @@ export default class ParentComponent extends LightningElement {
         this.distributorId = detail ? detail : ''; // Set to empty string if distributor is removed
         this.Error = '';
         console.log('distributeur in lookupUpdatehandler:', this.distributorId);
+        
+        this.template.querySelector('c-agence').reset();
+        this.agenceId = ''; 
     }
 
     lookupUpdatehandlerAgence(event) {
