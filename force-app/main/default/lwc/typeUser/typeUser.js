@@ -16,6 +16,7 @@ export default class TypeUser extends LightningElement {
 
     handleTypeChange(event) {
         this.selectedType = event.target.value;
+        this.errorMessage = '';
         const selectEvent = new CustomEvent('typechange', { detail: this.selectedType });
         this.dispatchEvent(selectEvent);
         console.log('UserType: ' + this.selectedType);  

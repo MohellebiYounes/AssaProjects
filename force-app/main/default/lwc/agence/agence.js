@@ -16,7 +16,7 @@ export default class Agence extends LightningElement {
 
     @track agenceId = '';
     @track agenceName = '';
-    @track errorMessage = ''; // property to hold error message
+    @track errorMessage = '' ;// property to hold error message
 
     lstResult = [];   
     hasRecords = true; 
@@ -111,6 +111,7 @@ export default class Agence extends LightningElement {
     lookupUpdateHandler(value) {
         if (value && value.Id) {
             this.agenceId = value.Id;
+            this.errorMessage = '';
             const lookupUpdateEvent = new CustomEvent('lookupupdate', {
                 detail: this.agenceId
             });

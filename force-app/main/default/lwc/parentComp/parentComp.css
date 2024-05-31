@@ -76,5 +76,10 @@ body, html {
     margin-bottom: 1rem; /* Espacement sous la ligne de séparation */
 }
 
+.form-reset {
+    animation: blink 0.5s ease-in-out 3;
+}
 
-
+@keyframes blink {
+    50% { opacity: 0; }
+}

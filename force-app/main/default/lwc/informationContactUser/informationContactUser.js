@@ -1,5 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 
+
 export default class InformationContactUser extends LightningElement {
     @api selectedType = ''; // importer le typeuser saisi dans le premier composant
 
@@ -8,7 +9,8 @@ export default class InformationContactUser extends LightningElement {
     @track civilite = '';
     @track email = '';
     @track username = '';
-    @track produit = '';
+    @track produit = [];
+
 
     @track errorMessageCivilite = '';
     @track errorMessageNom = '';
@@ -67,7 +69,7 @@ export default class InformationContactUser extends LightningElement {
     }
 
     handleProduitChange(event) {
-        this.produit = event.target.value;
+        this.produit = event.detail.value;
         this.errorMessageProduit = ''; // Clear the error message when a valid selection is made
         this.dispatchUpdateEvent('produit', this.produit);
     }
@@ -80,9 +82,9 @@ export default class InformationContactUser extends LightningElement {
         this.dispatchEvent(updateEvent);
     }
 
-    // Gérer les changements de sélection de produit
-    get showProduitField() {
-        return this.selectedType === 'Animateur';
+     // Gérer les changements de sélection de produit
+     get showProduitField() {
+        return this.selectedType === 'Animateur' || this.selectedType === 'Livreur';
     }
 
     @api
@@ -114,7 +116,13 @@ export default class InformationContactUser extends LightningElement {
             isValid = false;
         }
 
-        if (this.showProduitField && !this.produit) {
+        // if (this.showProduitField && !this.produit) {
+        //     this.errorMessageProduit = 'This field is required.';
+        //     isValid = false;
+        // }
+
+        // return isValid;
+        if (this.produit.length === 0) { // Vérifier si aucun produit n'a été sélectionné
             this.errorMessageProduit = 'This field is required.';
             isValid = false;
         }
@@ -128,7 +136,7 @@ export default class InformationContactUser extends LightningElement {
         this.civilite = '';
         this.email = '';
         this.username = '';
-        this.produit = '';
+        this.produit = [];
 
         this.errorMessageCivilite = '';
         this.errorMessageNom = '';

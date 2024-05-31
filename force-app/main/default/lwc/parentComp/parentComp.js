@@ -24,7 +24,7 @@ export default class ParentComponent extends LightningElement {
     @track civilite = '';
     @track email = '';
     @track username = '';
-    @track produit = '';
+    @track produit = [];
    
 
     handleTypeChange(event) {
@@ -42,7 +42,7 @@ export default class ParentComponent extends LightningElement {
         this.distributorId = detail ? detail : ''; // Set to empty string if distributor is removed
         this.Error = '';
         console.log('distributeur in lookupUpdatehandler:', this.distributorId);
-        
+
         this.template.querySelector('c-agence').reset();
         this.agenceId = ''; 
     }
@@ -110,11 +110,10 @@ export default class ParentComponent extends LightningElement {
                 contactId: null 
             })
             .then(result => {
-                // Affichez un message de succès à l'utilisateur
-                this.showToast('Success', 'User created successfully', 'success');
-                
                 // Capturer l'ID de l'utilisateur créé
                 userId = result; 
+
+                // Affichez un message de succès à l'utilisateur
     
                 // Définir les Permission Sets de base
                 let permSetNames = ['LightningRetailExecutionStarter', 'MapsUser'];
@@ -125,18 +124,25 @@ export default class ParentComponent extends LightningElement {
                     permSetNames.push('ActionPlans');
                 }
                 // Ajouter des Permission Sets spécifiques si le type est 'Animateur' et le produit est 'adsl' ou 'ftth'
-             if (this.selectedType === 'Animateur' && this.produit === 'ADSL') {
-                permSetNames.push('ADSL');
-             } else if (this.selectedType === 'Animateur' && this.produit === 'FTTH') {
-                permSetNames.push('FTTH');
-              }
+            //  if (this.selectedType === 'Animateur' && this.produit === 'ADSL') {
+            //     permSetNames.push('ADSL');
+            //  } else if (this.selectedType === 'Animateur' && this.produit === 'FTTH') {
+            //     permSetNames.push('FTTH');
+            // }
+            for (let item of this.produit) {
+                if (this.selectedType === 'Animateur' && item === 'ADSL') {
+                    permSetNames.push('ADSL');
+                } else if (this.selectedType === 'Animateur' && item === 'FTTH') {
+                    permSetNames.push('FTTH');
+                }
+            }                
     
                 // Appel de la méthode pour attribuer les Permission Sets
                 return assignPermissionSets({ permSetNames: permSetNames, userId: userId });
             })
             .then(() => {
                 // Affichez un message de succès pour l'attribution des Permission Sets
-                this.showToast('Success', 'Permission sets assigned successfully', 'success');
+                // this.showToast('Success', 'Permission sets assigned successfully', 'success');
     
                 // Définir les Permission Set Licenses de base
                 let permSetLicenseNames = ['SFMaps_Maps_LiveMobileTracking', 'IndustriesVisitPsl', 'SFMaps_Maps_Advanced', 'LightningRetailExecutionStarterPsl'];
@@ -146,7 +152,9 @@ export default class ParentComponent extends LightningElement {
             })
             .then(() => {
                 // Affichez un message de succès pour l'attribution des Permission Set Licenses
-                this.showToast('Success', 'Permission set licenses assigned successfully', 'success');
+                // this.showToast('Success', 'Permission set licenses assigned successfully', 'success');
+                this.showToast('Success', 'User"'+this.nom+this.prenom+'"with permissions created ', 'success');
+
                 
                 // Appeler la méthode Apex pour créer un nouveau contact
                 return createContact({
@@ -162,8 +170,7 @@ export default class ParentComponent extends LightningElement {
             .then(result => {
                 // Capturer l'ID du contact créé
                 contactId = result;
-                this.showToast('Success', 'Contact created successfully', 'success');
-                console.log('Contact created with ID:', contactId);
+                // console.log('Contact created with ID:', contactId);
     
                 // Si le type sélectionné est 'Livreur', créer la relation AccountContactRelation
                 if (this.selectedType === 'Livreur') {
@@ -175,7 +182,9 @@ export default class ParentComponent extends LightningElement {
                     })
                     .then(() => {
                         // Affichez un message de succès pour la création de la relation AccountContactRelation
-                        this.showToast('Success', 'Account-Contact relation created successfully', 'success');
+                        // this.showToast('Success', 'Account-Contact relation created successfully', 'success');
+                        this.showToast('Success', 'Contact"' +this.nom+this.prenom+ '"created and related to AGENCE', 'success');
+                        
                     });
                 }
             })
@@ -197,8 +206,9 @@ export default class ParentComponent extends LightningElement {
             .then(result => {
                 // Capturer l'ID du contact créé
                 contactId = result;
-                this.showToast('Success', 'Contact for Utilisateur BO created successfully', 'success');
-                console.log('Contact created with ID:', contactId);
+                this.showToast('Success', 'Contact"' +this.nom+this.prenom+ '"created successfully', 'success');
+                // console.log('Contact created with ID:', contactId);
+                
 
                 // Créer l'utilisateur Salesforce avec le profil "BO Distributeur"
                 return createUser({
@@ -227,16 +237,13 @@ export default class ParentComponent extends LightningElement {
                 }
             })
             .then(() => {
-                this.showToast('Success', 'User for Utilisateur BO created successfully and added to Queue', 'success');
-                console.log('User created for Utilisateur BO and added to Queue');
+                this.showToast('Success', 'User"'+this.nom+this.prenom+'"created and added to Queue', 'success');
             })
             .catch(error => {
                 this.showToast('Error', 'Erreur lors de la création du contact ou de l\'ajout à la file d\'attente : ' + (error.body ? error.body.message : error.message), 'error');
                 console.error('Erreur lors de la création du contact ou de l\'ajout à la file d\'attente : ', error);
             });
-        } else {
-            
-        }
+        } 
         
     }
     
@@ -273,4 +280,30 @@ export default class ParentComponent extends LightningElement {
     handleProduitUpdate(event) {
         this.produit = event.detail;
     }
+    resetForm() {
+        // Réinitialiser toutes les valeurs des champs
+        this.nom = '';
+        this.prenom = '';
+        this.civilite = '';
+        this.email = '';
+        this.username = '';
+        this.produit = [];
+        this.selectedType = '';
+        this.distributorId = '';
+        this.agenceId = '';
+    
+        // Réinitialiser les composants enfants
+        this.template.querySelectorAll('c-agence, c-distributeur, c-type-user, c-information-contact-user').forEach(cmp => {
+            if (cmp.reset) {
+                cmp.reset();
+            }
+        });
+    
+        // Ajouter la classe pour l'effet visuel
+        this.formReset = true;
+        setTimeout(() => {
+            this.formReset = false;
+        }, 1500); // Durée de l'effet visuel (1.5 secondes)
+    }
+
 }

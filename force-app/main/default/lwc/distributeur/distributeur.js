@@ -111,6 +111,7 @@ export default class Distributeur extends LightningElement {
     lookupUpdateHandler(value) {
         if (value && value.Id) {
             this.distributeurId = value.Id;
+            this.errorMessage = '';
             const lookupUpdateEvent = new CustomEvent('lookupupdate', {
                 detail: this.distributeurId
             });
