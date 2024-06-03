@@ -122,7 +122,7 @@ export default class InformationContactUser extends LightningElement {
         // }
 
         // return isValid;
-        if (this.produit.length === 0) { // Vérifier si aucun produit n'a été sélectionné
+        if (this.showProduitField && this.produit.length === 0) {
             this.errorMessageProduit = 'This field is required.';
             isValid = false;
         }
