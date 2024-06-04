@@ -170,7 +170,11 @@ export default class ParentComponent extends NavigationMixin(LightningElement) {
                     return contactId;
                 })
                 .catch(error => {
-                    this.showToast('Error', 'Erreur lors de la création de l\'utilisateur ou de l\'attribution des permissions : ' + (error.body ? error.body.message : error.message), 'error');
+                    if (error.body && error.body.message.includes('DUPLICATE_USERNAME')) {
+                        this.showToast('Error', 'Le nom Username existe déjà. Veuillez utiliser un nom d\'utilisateur différent.', 'error');
+                    } else {
+                        this.showToast('Error', 'Erreur lors de la création de l\'utilisateur ou de l\'attribution des permissions : ' + (error.body ? error.body.message : error.message), 'error');
+                    }
                     console.error('Erreur lors de la création de l\'utilisateur ou de l\'attribution des permissions : ', error);
                     throw error;
                 });
